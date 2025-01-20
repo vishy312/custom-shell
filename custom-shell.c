@@ -1,6 +1,15 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/wait.h>
 
-void main()
+int executeCommand(char *args[]);
+
+int main()
 {
-    printf("Hello, World!\n");
+    char *args[] = {"/bin/ls", "-l", NULL};
+
+    executeCommand(args);
+
+    return 0;
 }
