@@ -28,3 +28,25 @@ int executeCommand(char *args[])
         printf("Hello from parent\n");
     }
 }
+
+char **parseArgs(char *args[])
+{
+    char *prefix = "/bin/";
+
+    return args
+}
+
+char *readCommand()
+{
+    char *lineptr = NULL;
+    size_t n = 10;
+    getline(&lineptr, &n, stdin);
+
+    int cmpInt = strcmp(lineptr, "exit\n");
+    if (cmpInt == 0)
+    {
+        return NULL;
+    }
+
+    return lineptr;
+}
