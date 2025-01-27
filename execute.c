@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 
 int executeCommand(char *args[])
@@ -25,28 +27,5 @@ int executeCommand(char *args[])
     else
     {
         wait(NULL);
-        printf("Hello from parent\n");
     }
-}
-
-char **parseArgs(char *args[])
-{
-    char *prefix = "/bin/";
-
-    return args
-}
-
-char *readCommand()
-{
-    char *lineptr = NULL;
-    size_t n = 10;
-    getline(&lineptr, &n, stdin);
-
-    int cmpInt = strcmp(lineptr, "exit\n");
-    if (cmpInt == 0)
-    {
-        return NULL;
-    }
-
-    return lineptr;
 }
