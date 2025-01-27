@@ -7,4 +7,4 @@
 #### Steps
 - open terminal in the root directory
 - Build the docker image. `docker build -t <image-name> .`
-- Run the docker container `docker run --name <container-name> <image-name>:v1`
+- Run the docker container `docker run -it --name <container-name> <image-name>:v1`
