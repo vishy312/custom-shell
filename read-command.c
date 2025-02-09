@@ -9,9 +9,7 @@ char *readCommand()
 
     int cmpInt = strcmp(lineptr, "exit\n");
     if (cmpInt == 0)
-    {
         return NULL;
-    }
 
     return lineptr;
 }

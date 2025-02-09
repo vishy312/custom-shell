@@ -2,7 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-char **tokenize(char *commandStr)
+void splitArray(
+    char **array,
+    int length,
+    int splitIndex,
+    char *(*subarray1)[],
+    int *length1,
+    char *(*subarray2)[],
+    int *length2);
+
+char **tokenize(char *commandStr, int *length)
 {
     // we need to convert char * type to char[] to avoid segmentation error.
     char command[100];
@@ -11,11 +20,10 @@ char **tokenize(char *commandStr)
     // to remove unwanted newline character at the end
     int len = strlen(command);
     if (len > 0)
-    {
         command[len - 1] = '\0';
-    }
 
     // actual tokenization operation
+    char *delimiter = " \t\n\r";
     char *token = strtok(command, " ");
 
     int capacity = 2;
@@ -53,7 +61,7 @@ char **tokenize(char *commandStr)
         i++;
         token = strtok(NULL, " ");
     }
-
+    *length = i;
     // setting the pointer to null
     tokens[i] = NULL;
 

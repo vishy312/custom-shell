@@ -1,32 +1,26 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
-int executeCommand(char *args[]);
+int executeCommand(char *args[], int length);
 char **parseTokens(char **tokens);
 char *readCommand();
-char **tokenize(char *commandStr);
+char **tokenize(char *commandStr, int *length);
 
 int readAndExecute()
 {
-    char *currDir = (char *)malloc(sizeof(char) * 100);
-    getcwd(currDir, 100);
-    if (currDir == NULL)
-    {
-        perror("failed to get current directory.");
-    }
-    else
-    {
-        printf("%s%s", currDir, ">");
-    }
+    printf("custom-shell> ");
+
     char *command = readCommand();
     if (command == NULL)
-    {
         return 1;
-    }
-    char **tokens = tokenize(command);
-    char **parsedTokens = parseTokens(tokens);
-    executeCommand(parsedTokens);
+
+    int length = 0;
+    char **tokens = tokenize(command, &length);
+
+    // char **parsedTokens = parseTokens(tokens);
+    executeCommand(tokens, length);
 
     return 0;
 }
