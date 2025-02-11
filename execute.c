@@ -25,6 +25,8 @@ void splitCommands(
 
 int redirection(char *args[], int length, int splitIndex, int append);
 int piping(char *args[], int length, int splitIndex);
+void parallelExecution(char *args[], int length, int splitIndex);
+void multipleExecution(char *args[], int length, int splitIndex);
 
 int executeCommand(char *args[], int length)
 {
@@ -64,6 +66,16 @@ int executeCommand(char *args[], int length)
             piping(args, length, j);
             return 0;
         }
+        else if (strcmp(args[j], ";") == 0)
+        {
+            parallelExecution(args, length, j);
+            return 0;
+        }
+        else if (strcmp(args[j], "&") == 0)
+        {
+            multipleExecution(args, length, j);
+            return 0;
+        }
     }
 
     pid_t pid;
@@ -89,6 +101,98 @@ int executeCommand(char *args[], int length)
     }
 }
 
+void multipleExecution(char *args[], int length, int splitIndex)
+{
+    int length1 = splitIndex + 1;
+    int length2 = length - splitIndex;
+    char *command1[length1];
+    char *command2[length2];
+
+    splitCommands(args, length, splitIndex, &command1, &length1, &command2, &length2);
+
+    pid_t pid1;
+    pid1 = fork();
+
+    if (pid1 < 0)
+    {
+        perror("Failed to create process fork!");
+    }
+    else if (pid1 == 0)
+    {
+        int exec_val = execvp(command1[0], command1);
+        if (exec_val == -1)
+        {
+            perror("Failed to execute the command");
+            exit(1);
+        }
+    }
+    waitpid(pid1, NULL, 0);
+
+    pid_t pid2;
+    pid2 = fork();
+
+    if (pid2 < 0)
+    {
+        perror("Failed to create process fork!");
+    }
+    else if (pid2 == 0)
+    {
+        int exec_val2 = execvp(command2[0], command2);
+        if (exec_val2 == -1)
+        {
+            perror("Failed to execute the command");
+            exit(1);
+        }
+    }
+    waitpid(pid2, NULL, 0);
+}
+
+void parallelExecution(char *args[], int length, int splitIndex)
+{
+    int length1 = splitIndex + 1;
+    int length2 = length - splitIndex;
+    char *command1[length1];
+    char *command2[length2];
+
+    splitCommands(args, length, splitIndex, &command1, &length1, &command2, &length2);
+
+    pid_t pid1;
+    pid1 = fork();
+
+    if (pid1 < 0)
+    {
+        perror("Failed to create process fork!");
+    }
+    else if (pid1 == 0)
+    {
+        int exec_val = execvp(command1[0], command1);
+        if (exec_val == -1)
+        {
+            perror("Failed to execute the command");
+            exit(1);
+        }
+    }
+
+    pid_t pid2;
+    pid2 = fork();
+
+    if (pid2 < 0)
+    {
+        perror("Failed to create process fork!");
+    }
+    else if (pid2 == 0)
+    {
+        int exec_val2 = execvp(command2[0], command2);
+        if (exec_val2 == -1)
+        {
+            perror("Failed to execute the command");
+            exit(1);
+        }
+    }
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
+}
+
 int piping(char *args[], int length, int splitIndex)
 {
     int length1 = splitIndex + 1;
@@ -97,15 +201,9 @@ int piping(char *args[], int length, int splitIndex)
     char *command2[length2];
 
     splitCommands(args, length, splitIndex, &command1, &length1, &command2, &length2);
-    // for (int k = 0; k < length1; k++)
-    // {
-    //     printf("command1[%d]: %s\n", k, command1[k]);
-    // }
 
     for (int k = 0; k < length2; k++)
     {
-        // printf("command2[%d]: %s\n", k, command2[k]);
-
         if (command2[k] != NULL && (strcmp(command2[k], "|") == 0))
         {
             perror("Multiple pipe operators are not allowed.");
@@ -172,8 +270,6 @@ int piping(char *args[], int length, int splitIndex)
     close(p[1]);
     waitpid(pid1, NULL, 0);
     waitpid(pid2, NULL, 0);
-
-    // return 0;
 }
 
 int redirection(char *args[], int length, int splitIndex, int append)
