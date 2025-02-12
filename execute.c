@@ -27,6 +27,8 @@ int redirection(char *args[], int length, int splitIndex, int append);
 int piping(char *args[], int length, int splitIndex);
 void parallelExecution(char *args[], int length, int splitIndex);
 void multipleExecution(char *args[], int length, int splitIndex);
+void builtinExecution(char *args[]);
+void singleExecution(char *args[]);
 
 int executeCommand(char *args[], int length)
 {
@@ -78,6 +80,34 @@ int executeCommand(char *args[], int length)
         }
     }
 
+    if (strcmp(args[0], "cd") == 0)
+    {
+        builtinExecution(args);
+        return 0;
+    }
+
+    singleExecution(args);
+    return 0;
+}
+
+void builtinExecution(char *args[])
+{
+
+    if (args[1] == NULL)
+    {
+        perror("No filepath defined!");
+    }
+    else
+    {
+        if (chdir(args[1]) != 0)
+        {
+            perror("Failed to change directory!");
+        }
+    }
+}
+
+void singleExecution(char *args[])
+{
     pid_t pid;
 
     pid = fork();
@@ -95,10 +125,8 @@ int executeCommand(char *args[], int length)
             perror("Command Execution Failed!\n");
         }
     }
-    else
-    {
-        wait(NULL);
-    }
+
+    waitpid(pid, NULL, 0);
 }
 
 void multipleExecution(char *args[], int length, int splitIndex)
