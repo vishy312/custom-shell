@@ -18,8 +18,6 @@ int readAndExecute()
 
     int length = 0;
     char **tokens = tokenize(command, &length);
-
-    // char **parsedTokens = parseTokens(tokens);
     executeCommand(tokens, length);
 
     return 0;
