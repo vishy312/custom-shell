@@ -8,6 +8,8 @@ char **parseTokens(char **tokens);
 char *readCommand();
 char **tokenize(char *commandStr, int *length);
 
+void execute2(char *command);
+
 int readAndExecute()
 {
     printf("custom-shell> ");
@@ -18,7 +20,8 @@ int readAndExecute()
 
     int length = 0;
     char **tokens = tokenize(command, &length);
-    executeCommand(tokens, length);
+    // executeCommand(tokens, length);
+    execute2(command);
 
     return 0;
 }
