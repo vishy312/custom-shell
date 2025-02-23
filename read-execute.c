@@ -12,7 +12,7 @@ void execute2(char *command);
 
 int readAndExecute()
 {
-    printf("custom-shell> ");
+    printf("dash> ");
 
     char *command = readCommand();
     if (command == NULL)

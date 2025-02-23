@@ -1,4 +1,4 @@
-# Custom Shell
+# Dash: A Custom Shell
 
 ## Setup Instruction
 #### Pre-requisites
