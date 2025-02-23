@@ -15,6 +15,7 @@ void *threadExecution(void *vargp);
 
 void execute2(char *command)
 {
+
     multipleExecution(command);
 }
 
@@ -87,6 +88,12 @@ void redirections(char *command)
             int argsLength = 0;
             char **args = tokenize2(pipecommands[0], &argsLength, " \t\r\n");
 
+            if (strcmp(args[0], "cd") == 0)
+            {
+                builtinExecution(args);
+                return;
+            }
+
             int exec_val = execvp(args[0], args);
 
             if (exec_val == -1)
@@ -113,7 +120,6 @@ void redirections(char *command)
 
             subcommands[1] = outfile;
         }
-        printf("%d\n", pipeLen - 1);
         int pipes[pipeLen - 1][2];
         for (int i = 0; i < pipeLen - 1; i++)
         {
@@ -196,6 +202,12 @@ void redirections(char *command)
 
                 int argsLength = 0;
                 char **args = tokenize2(pipecommands[i], &argsLength, " \t\r\n");
+
+                if (strcmp(args[0], "cd") == 0)
+                {
+                    builtinExecution(args);
+                    return;
+                }
                 int exec_val = execvp(args[0], args);
                 if (exec_val == -1)
                 {
